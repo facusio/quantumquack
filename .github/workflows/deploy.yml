@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches: [main]
-    paths-ignore: ['docs/**', '**/*.md']
+    paths-ignore: ['docs/**', '**/*.md', '.github/workflows/ci.yml']
   workflow_dispatch: {}
 
 permissions:
