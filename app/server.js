@@ -24,7 +24,8 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/healthz", (_req, res) => res.send("ok"));
+// /health y no /healthz: Cloud Run reserva las rutas que terminan en "z" (devuelven 404 sin llegar al contenedor).
+app.get("/health", (_req, res) => res.send("ok"));
 
 app.post("/api/upload-url", async (req, res) => {
   const { contentType, size, claimId } = req.body || {};
