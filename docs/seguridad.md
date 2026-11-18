@@ -41,7 +41,7 @@ Los hallazgos 1 a 4 son trade-offs de costo aceptados para un entorno de demo. L
 
 ## 3. Trivy (imagen del contenedor)
 
-Fuente: job `image` del CI en el PR #1 (Trivy v0.69.3, `severity: CRITICAL,HIGH`, `ignore-unfixed: true`).
+Fuente: job `image` del CI en el PR #1, antes del cambio de imagen base (Trivy v0.69.3, `severity: CRITICAL,HIGH`, `ignore-unfixed: true`).
 Resultado: **7 vulnerabilidades (1 CRITICAL, 6 HIGH), todas en `libssl3`** de la imagen base `gcr.io/distroless/nodejs22-debian12:nonroot` (Debian 12.13). Las dependencias npm de la app (`node-pkg`) no tienen hallazgos.
 
 | CVE | Severidad | Instalada | Corregida en |
@@ -54,7 +54,4 @@ Resultado: **7 vulnerabilidades (1 CRITICAL, 6 HIGH), todas en `libssl3`** de la
 | CVE-2026-45447 | HIGH | 3.0.18-1~deb12u2 | 3.0.20-1~deb12u2 |
 | CVE-2026-84782 | HIGH | 3.0.18-1~deb12u2 | 3.0.22-1~deb12u2 |
 
-**Estado: pendiente.** Como el job usa `exit-code: 1`, el CI falla hasta que se resuelva. El `Dockerfile` usa la etiqueta `nodejs22-debian12:nonroot` y no tiene parches de OpenSSL que la imagen base todavía no trae. Opciones:
-
-1. Cambiar la imagen base por una que ya tenga OpenSSL corregido (por ejemplo, la variante `nodejs22-debian13` de distroless) y volver a correr Trivy para confirmarlo.
-2. Si no hay imagen base corregida, aceptar el riesgo de forma explícita con un `.trivyignore` que liste cada CVE con su justificación y fecha de revisión. La app no procesa certificados X.509 ni CMS de terceros: solo hace TLS saliente hacia APIs de Google.
+**Estado: resuelto** en `main` (a6650b0). La imagen base pasó a `gcr.io/distroless/nodejs22-debian13:nonroot`. Al volver a correr el CI en el PR #1, Trivy reporta **0 vulnerabilidades** en `quantumquack:ci (debian 13.7)`.
